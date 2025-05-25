@@ -4,8 +4,8 @@ SRCDIR=src
 TESTDIR=tests
 UNITYDIR=unity
 
-# Source files
-SOURCES=$(wildcard $(SRCDIR)/*.c)
+# Source files (exclude main.c for tests)
+SOURCES=$(filter-out $(SRCDIR)/main.c, $(wildcard $(SRCDIR)/*.c))
 OBJECTS=$(SOURCES:.c=.o)
 
 # Test files
@@ -16,31 +16,25 @@ TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 UNITY_SOURCES=$(UNITYDIR)/unity.c
 UNITY_OBJECTS=$(UNITY_SOURCES:.c=.o)
 
-# Main executable
-TARGET=calculator
-
 # Test executable
 TEST_TARGET=test_runner
 
 .PHONY: all test clean
 
-all: $(TARGET)
-
-$(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(TARGET)
+all: test
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 
-$(TEST_TARGET): $(filter-out $(SRCDIR)/main.o, $(OBJECTS)) $(TEST_OBJECTS) $(UNITY_OBJECTS)
+$(TEST_TARGET): $(OBJECTS) $(TEST_OBJECTS) $(UNITY_OBJECTS)
 	$(CC) $^ -o $(TEST_TARGET)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TEST_OBJECTS) $(UNITY_OBJECTS) $(TARGET) $(TEST_TARGET)
+	rm -f $(OBJECTS) $(TEST_OBJECTS) $(UNITY_OBJECTS) $(TEST_TARGET)
+	rm -f $(SRCDIR)/*.o $(TESTDIR)/*.o $(UNITYDIR)/*.o
 
 install-deps:
-	# Install any dependencies if needed
 	@echo "No additional dependencies needed for this project"
