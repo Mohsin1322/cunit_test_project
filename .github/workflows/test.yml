@@ -24,11 +24,9 @@ jobs:
         mkdir -p unity
         wget -O unity/unity.c https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src/unity.c
         wget -O unity/unity.h https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src/unity.h
+        wget -O unity/unity_internals.h https://raw.githubusercontent.com/ThrowTheSwitch/Unity/master/src/unity_internals.h
         
-    - name: Build project
-      run: make all
-      
-    - name: Run unit tests
+    - name: Build and run unit tests
       run: make test
       
     - name: Clean up
